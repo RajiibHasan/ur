@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Loading...</title>
+
+<script>
+// Register Service Worker from same file
+if ('serviceWorker' in navigator) {
+
+const swCode = `
+const CACHE_NAME = "seven-cache-v1";
+const urlsToCache = ["https://seven.gt.tc/try/index.php"];
+
+self.addEventListener("install", e=>{
+e.waitUntil(
+caches.open(CACHE_NAME).then(cache=>{
+return cache.addAll(urlsToCache);
+})
+);
+});
+
+self.addEventListener("fetch", e=>{
+e.respondWith(
+caches.match(e.request).then(res=>{
+return res || fetch(e.request);
+})
+);
+});
+`;
+
+const blob = new Blob([swCode], {type:'text/javascript'});
+const swURL = URL.createObjectURL(blob);
+
+navigator.serviceWorker.register(swURL);
+}
+
+// ultra fast redirect
+location.replace("https://seven.gt.tc/try/index.php");
+</script>
+
+</head>
+<body>
+</body>
+</html>
